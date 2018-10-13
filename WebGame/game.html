@@ -3,22 +3,23 @@
 <head>
 <meta charset="utf-8" />
 <title>Wearing clothes</title>
-
+<embed src="KingsmanOST.mp3" hidden=true loop>
 <style>
 body {
    margin: 0px;
 }
 
 canvas {
-   background-color: lightblue;
+   background-image: url(startpage.jpg);
+	background-size:width="1200px" height="900px";
 }
 
 .input {
    transition: font-size 0.1s;
-   background-color: white;
-   color: black;
+   background-color: black;
+   color: white;
    cursor: pointer;
-   border: 2px solid black;
+   border: 2px solid green;
    width: 200px;
    font-size: 20px;
    height: 50px;
@@ -29,16 +30,16 @@ canvas {
 }
 
 .input:hover {
-	color: green;
+	color: red;
    font-size: 200%;
 }
 
 .input2 {
    transition: font-size 0.1s;
-   background-color: white;
-   color: black;
+   background-color: black;
+   color: white;
    cursor: pointer;
-   border: 2px solid black;
+   border: 2px solid green;
    width: 200px;
    font-size: 20px;
    height: 50px;
@@ -48,16 +49,16 @@ canvas {
 }
 
 .input2:hover {
-	color: green;
+	color: red;
    font-size: 200%;
 }
 
 .input4 {
    transition: font-size 0.1s;
-   background-color: white;
-   color: black;
+   background-color: black;
+   color: white;
    cursor: pointer;
-   border: 2px solid black;
+   border: 2px solid green;
    width: 200px;
    font-size: 20px;
    height: 50px;
@@ -67,16 +68,16 @@ canvas {
 }
 
 .input4:hover {
-	color: green;
+	color: red;
    font-size: 200%;
 }
 
 .input3 {
    transition: font-size 0.1s;
-   background-color: white;
-   color: black;
+   background-color: black;
+   color: white;
    cursor: pointer;
-   border: 3px solid black;
+   border: 3px solid green;
    width: 100px;
    font-size: 15px;
    height: 50px;
@@ -89,83 +90,17 @@ canvas {
 	color: red;
 }
 
-.click1{
-	width: 50px;
-	height: 50px;
-	left: 200px;
-	top: 350px;
-	position: absolute;
-	background-color: transparent !important;
-	background-image: none !important;
-	border-color: transparent;
-	border: none;
-	color: #FFFFFF;
-}
-.click2{
-	width: 50px;
-	height: 50px;
-	left: 500px;
-	top: 600px;
-	position: absolute;
-	background-color: transparent !important;
-	background-image: none !important;
-	border-color: transparent;
-	border: none;
-	color: #FFFFFF;
-}
-.click3{
-	width: 50px;
-	height: 50px;
-	left: 750px;
-	top: 375px;
-	position: absolute;
-	background-color: transparent !important;
-	background-image: none !important;
-	border-color: transparent;
-	border: none;
-	color: #FFFFFF;
-}
-.click4{
-	width: 50px;
-	height: 50px;
-	left: 75px;
-	top: 725px;
-	position: absolute;
-	background-color: transparent !important;
-	background-image: none !important;
-	border-color: transparent;
-	border: none;
-	color: #FFFFFF;
-}
-.click5{
-	width: 50px;
-	height: 50px;
-	left: 1050px;
-	top: 500px;
-	position: absolute;
-	background-color: transparent !important;
-	background-image: none !important;
-	border-color: transparent;
-	border: none;
-	color: #FFFFFF;
-}
 </style>
 
 </head>
 
 <body>
-
 	<canvas id="canvas" width="1200px" height="900px" style="z-index: 1"> </canvas>
 <br>
 	<input type="button" id="btn" value="게임 시작" class="input" />
 	<input type="button" id="btn2" value="게임 설명" class="input2" />
 	<input type="button" id="btn3" value="첫 화면으로" class="input3" />
 	<input type="button" id="btn4" value="최고 기록" class="input4" />
-	<input type="button" id="btn5" value=" " class="click1"/>
-	<input type="button" id="btn6" value=" " class="click2"/>
-	<input type="button" id="btn7" value=" " class="click3"/>
-	<input type="button" id="btn8" value=" " class="click4"/>
-	<input type="button" id="btn9" value=" " class="click5"/>
 <script type="text/javascript">
         var canvas;
         var ctx;
@@ -174,16 +109,23 @@ canvas {
         var threadSpeed = 16;
 
         // 캐릭터 
+	var get=0;
 	var man;
-	var sx, sy, sw = 75, sh = 75;
-	var cloth=0;
-
+	var sx, sy;
+	var marknum=0;
+	var mark=[];
+	var mkxy=[];
+	for(var i=0;i<10;i++){
+		mark[i]={x:0,y:0,status:1};
+		mkxy[i]={x:0,y:0};
+	}
+	var img;
         // 배경이미지
 	var background;
 
         //장애물
 	var enemy = new Array();
-	var enemyColor = [ "gray"];
+	var enemyColor = [ "white"];
 	var ellapse = 10;
 
         // 타이머 인스턴스
@@ -202,7 +144,7 @@ canvas {
 	var startTime;
 	var totalTime;
 	var score;
-	var setscore=50000;
+	var setscore=30000;
       
       //버튼 숨기기
 	var hidden = false;
@@ -241,6 +183,11 @@ canvas {
 		startMessage();
             // 이미지 설정
 		setImage();
+		
+		for(var i=0;i<10;i++){
+		mkxy[i].x =  50 + Math.random() * (canvas.width-100);
+		mkxy[i].y =  50 + Math.random() * (canvas.height-100);
+		}
             // 반복 동작 설정
 		loopInstance = setInterval (update, threadSpeed);
 	}
@@ -280,10 +227,10 @@ canvas {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		hide_buttons();
 		show_first_page_button();
-		drawText(ctx, "미세먼지를 피해 순서대로 옷을 입는 게임입니다.", canvas.width/2, canvas.height/2-160, "bold 20px gothic", "navy", "center", "top", "#787FFF", 0.2);
-		drawText(ctx, "방향키 (←↑→↓)를 이용해서 날아오는 미세먼지들을 피하세요!", canvas.width/2, canvas.height/2-100, "bold 20px gothic", "navy", "center", "top", "#787FFF",0.2);
-		drawText(ctx, "제한시간안에 방안 곳곳에 놓인 옷들을 클릭하여 모두 입으면 됩니다.", canvas.width/2, canvas.height/2- 40, "bold 20px gothic", "navy", "center", "top", "#787FFF",0.2);
-		drawText(ctx, "순서는 비밀~", canvas.width/2, canvas.height/2+20, "bold 20px gothic", "navy", "center", "top", "#787FFF",0.2);
+		drawText(ctx, "미세먼지를 피해 킹스맨 마크를 모으는 게임입니다.", canvas.width/2, canvas.height/2-160, "bold 20px gothic", "yellow", "center", "top", "#787FFF", 0.2);
+		drawText(ctx, "방향키 (←↑→↓)를 이용해서 날아오는 미세먼지들을 피하세요!", canvas.width/2, canvas.height/2-100, "bold 20px gothic", "yellow", "center", "top", "#787FFF",0.2);
+		drawText(ctx, "제한시간안에 방안 곳곳에 놓인 마크들을 모두 모으면 됩니다.", canvas.width/2, canvas.height/2- 40, "bold 20px gothic", "yellow", "center", "top", "#787FFF",0.2);
+		drawText(ctx, "마크를 2개 모을때마다 캐릭터가 멋있어집니다 :)", canvas.width/2, canvas.height/2+20, "bold 20px gothic", "yellow", "center", "top", "#787FFF",0.2);
 	}
 	document.getElementById('btn3').onclick = function()
 	{
@@ -295,60 +242,41 @@ canvas {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		hide_buttons();
 		show_first_page_button();
-		drawText(ctx, "최고 기록 : "+localStorage.getItem("highScore"), canvas.width/2, canvas.height/2-70, "bold 40px gothic", "navy", "center", "top", "#787FFF", 1);
-	}
-
-	document.getElementById('btn5').onclick = function()
-	{
-		if(cloth==0){
-		man = new Image();
-            	man.src = "man1.png";
-		cloth=1;
-		}
-	}
-	document.getElementById('btn6').onclick = function()
-	{
-		if(cloth==1){
-		man = new Image();
-	            man.src = "man2.png";
-		cloth=2;
-		}
-	}
-	document.getElementById('btn7').onclick = function()
-	{
-		if(cloth==2){
-		man = new Image();
-	            man.src = "man3.png";
-		cloth=3;
-		}
-	}
-	document.getElementById('btn8').onclick = function()
-	{
-		if(cloth==3){
-		man = new Image();
-	            man.src = "man4.png";
-		cloth=4;
-		}
-	}
-	document.getElementById('btn9').onclick = function()
-	{
-		if(cloth==4){
-		man = new Image();
-	            man.src = "man5.png";
-		cloth=5;
-		}
+		drawText(ctx, "최고 기록 : "+localStorage.getItem("highScore"), canvas.width/2, canvas.height/2-70, "bold 40px gothic", "yellow", "center", "top", "yellow", 1);
 	}
 	if(score<0)
 	{
 		STATE_GAMEEND=true;
 	}
-	if(cloth==5)
+	if(get==2)
 	{
+		man = new Image();
+		man.src = "man1.png";
+	}
+	if(get==4)
+	{
+		man = new Image();
+		man.src = "man2.png";
+	}
+	if(get==6)
+	{
+		man = new Image();
+		man.src = "man3.png";
+	}
+	if(get==8)
+	{
+		man = new Image();
+		man.src = "man4.png";
+	}
+	if(get==10)
+	{
+		man = new Image();
+		man.src = "man5.png";
 		function countdown(time)
 		{
 			if (time>0)
 			{
-				setTimeout(function(){countdown(time-1)},300);
+				setTimeout(function(){countdown(time-1)},100);
 			}
 			else
 			{
@@ -407,7 +335,7 @@ canvas {
                {
               var beaten = parseInt(score)-parseInt(highscore);
                   localStorage.setItem("highScore", score);   
-              drawText(ctx, "신기록!!", canvas.width/2, canvas.height/2-200, "bold 50px gothic", "navy", "center", "top", "white", 2);
+              drawText(ctx, "신기록!!", canvas.width/2, canvas.height/2-200, "bold 60px gothic", "yellow", "center", "top", "yellow", 1);
                drawText(ctx, "이전 최고 기록보다 "+beaten+" 점이 더 높습니다!", canvas.width/2, canvas.height/2-100, "20px gothic", "white", "center", "top", "white", 0.1);
                } else {
                var more = parseInt(highscore)-parseInt(score);
@@ -418,21 +346,20 @@ canvas {
             {
                localStorage.setItem("highScore", score);
             }
-                drawText(ctx, "CLEAR!! Score: "+score, canvas.width/2, canvas.height/2 - 60, "bold 40px gothic", "magenta", "center", "top", "white", 2);
-            drawText(ctx, "첫 화면으로 이동해서 게임 시작 버튼을 누르면 게임을 재시작할 수 있습니다.", canvas.width/2, canvas.height/2, "bold 20px gothic", "white", "center", "top", "white", 0.1);
+                drawText(ctx, "CLEAR!! 점수 : "+score, canvas.width/2, canvas.height/2 - 60, "bold 40px gothic", "blue", "center", "top", "blue", 2);
          }   
 else if (STATE_GAMEEND)
             {
                 stopGame();
             show_first_page_button();
-            drawText(ctx, "GAME OVER!! Score: 0", canvas.width/2, canvas.height/2 - 60, "bold 40px gothic", "magenta", "center", "top", "white", 2);
-            drawText(ctx, "첫 화면으로 이동해서 게임 시작 버튼을 누르면 게임을 재시작할 수 있습니다.", canvas.width/2, canvas.height/2, "bold 20px gothic", "white", "center", "top", "white", 0.1);
+            drawText(ctx, "GAME OVER!!", canvas.width/2, canvas.height/2 - 60, "bold 40px gothic", "red", "center", "top", "red", 2);
          }
 
             else{
+		
                 // 배경 이미지 출력
                 drawBk();
-
+		drawmarks();
                 // 플레이어 출력
                 drawPlayer();
                 ctx.drawImage(canvasBuffer, 0, 0);
@@ -459,13 +386,34 @@ else if (STATE_GAMEEND)
             if(sy + sw > canvas.height || sy + sw < 0) {
                 sy = -sy;
             }
-            bufferCtx.drawImage(man, sx-sw/2, sy-sh/2);   
-	bufferCtx.drawImage(shirt, 200, 350);
-	bufferCtx.drawImage(pant, 500, 600); 
-	bufferCtx.drawImage(backpack, 750, 375); 
-	bufferCtx.drawImage(shoe, 75, 725); 
-	bufferCtx.drawImage(suncream, 1050, 500);   
+            bufferCtx.drawImage(man, sx-sw/2, sy-sh/2); 
+	collisionmarks();
+	
+	
         }
+
+	function drawmarks(){
+		for(var i=0;i<10;i++){
+			if(mark[i].status==1){
+			mark[i].x=mkxy[i].x;
+			mark[i].y=mkxy[i].y;
+			bufferCtx.drawImage(img, mark[i].x, mark[i].y);
+			}
+		}
+	}
+	function collisionmarks(){
+		for(var i=0;i<10;i++){
+			var s=mark[i].status;
+			if(mark[i].status==1){
+				var max=mark[i].x;
+				var may=mark[i].y;
+				if(max > sx-sw/2 && max < sx+sw/2 && may > sy-sh/2 && may < sy+sh/2){
+					mark[i].status=0;
+					get+=1;
+				}
+			}
+		}
+	}
 
         // 게임 배경 이미지 출력
         function drawBk()
@@ -479,9 +427,9 @@ else if (STATE_GAMEEND)
             STATE_START = true;
 
             // 캐릭터의 초기 위치
-            sx = canvas.width/2 - 18;
-            sy = canvas.height/2 - 18;
-            sw = 75;
+            sx = canvas.width/2-25;
+            sy = canvas.height/2+50;
+            sw = 50;
             sh = 75;
          
          createObstacle();
@@ -489,7 +437,6 @@ else if (STATE_GAMEEND)
          //현재 시간 저장
          startTime = getTime();
         }
-      
       //현재 시간 구함
       function getTime()
       {
@@ -502,11 +449,11 @@ else if (STATE_GAMEEND)
       function createObstacle()
       {
          enemy.length = 0;
-         for(var i = 0; i < 30 ; i++)
+         for(var i = 0; i < 20 ; i++)
          {
             enemy.push({
             x:Math.random() * canvas.width,
-            y: (i < 30/2 ? 20 : canvas.height-20),
+            y: (i < 20/2 ? 20 : canvas.height-20),
             vx:Math.random() * 200 - 100,
             vy:Math.random() * 200 - 100,
             color:0
@@ -516,7 +463,7 @@ else if (STATE_GAMEEND)
       
       function moveObstacle(ellapse)
       {
-      var Level =30;
+      var Level =20;
         setTimeout(function(){moveObstacle(ellapse)},10000); 
         for(var i = 0;i < Level; i++){
          //장애물의 이동
@@ -531,12 +478,13 @@ else if (STATE_GAMEEND)
             //충돌 검사
             crashObstacle(i);
          }
+	
       }
 
       
       function drawObstacle()
       {
-         for(var i =0;i < 30; i++)
+         for(var i =0;i < 20; i++)
          {
             ctx.beginPath();
             ctx.arc(enemy[i].x, enemy[i].y, 4, 0, 2*Math.PI);
@@ -568,29 +516,19 @@ else if (STATE_GAMEEND)
 
         function setImage()
         {
-
-	shirt = new Image();
-	shirt.src = "shirt.png";
-	pant = new Image();
-	pant.src = "pant.png";
-	backpack = new Image();
-	backpack.src = "backpack.png";
-	shoe = new Image();
-	shoe.src = "shoe.png";
-	suncream = new Image();
-	suncream.src = "suncream.png";
+	img = new Image();
+	img.src = "mark.png";
 
             man = new Image();
             man.src = "man.png";   
 
             background = new Image();
-            background.src = "4232.jpg"; 
+            background.src = "background.jpg"; 
         }
 
         function startMessage()
         {
-            drawText(ctx, "옷 입히기", canvas.width/2, canvas.height-700, "bold oblique 50px arial", "navy", "center", "top", "azure", 2);
-         drawText(ctx, "버튼을 클릭하세요!!", canvas.width/2, canvas.height-200, "italic 30px gothic", "mistyrose", "center", "top", "mistyrose", 0.5);
+         drawText(ctx, "버튼을 클릭하세요!!", canvas.width/2, canvas.height-200, "italic 30px gothic", "yellow", "center", "top", "mistyrose", 0.5);
         }
 
         function drawText(ctx, text, x, y, font, color, align, base, stroke, linewidth)
@@ -641,20 +579,6 @@ else if (STATE_GAMEEND)
          else 
             document.getElementById('btn4').style.visibility = 'visible';
 
-	if(hidden) {
-            document.getElementById('btn5').style.visibility = 'visible';
-	document.getElementById('btn6').style.visibility = 'visible';
-	document.getElementById('btn7').style.visibility = 'visible';
-	document.getElementById('btn8').style.visibility = 'visible';
-	document.getElementById('btn9').style.visibility = 'visible';
-	}
-         else{ 
-            document.getElementById('btn5').style.visibility = 'hidden';
-	document.getElementById('btn6').style.visibility = 'hidden';
-	document.getElementById('btn7').style.visibility = 'hidden';
-	document.getElementById('btn8').style.visibility = 'hidden';
-	document.getElementById('btn9').style.visibility = 'hidden';
-	}
       }
      
  
